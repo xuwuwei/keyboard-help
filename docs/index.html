@@ -1,1 +1,632 @@
-hi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MultiLinkServer — Help</title>
+<meta name="description" content="MultiLinkServer help and setup guide. Turn your phone into a wireless keyboard and trackpad.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#1d6fa4;--blue-dark:#155a87;--blue-light:#e8f2fa;
+  --green:#16a34a;--orange:#ea580c;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-400:#94a3b8;--gray-600:#475569;--gray-800:#1e293b;
+  --radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--gray-800);background:#fff;line-height:1.6}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+img{max-width:100%;border-radius:8px}
+
+/* ── Nav ── */
+nav{background:#fff;border-bottom:1px solid var(--gray-200);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;height:56px;gap:32px}
+.nav-logo{font-weight:700;font-size:16px;color:var(--blue);white-space:nowrap}
+.nav-links{display:flex;gap:24px;flex:1}
+.nav-links a{font-size:13px;color:var(--gray-600);white-space:nowrap}
+.nav-links a:hover{color:var(--blue);text-decoration:none}
+.lang-sel{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-600);cursor:pointer;background:var(--gray-100);border:1px solid var(--gray-200);border-radius:8px;padding:5px 10px;white-space:nowrap}
+.lang-sel:hover{background:var(--gray-200)}
+.lang-sel svg{width:14px;height:14px;flex-shrink:0}
+
+/* ── Lang dropdown ── */
+.lang-dropdown{position:fixed;top:60px;right:16px;background:#fff;border-radius:10px;box-shadow:var(--shadow-lg);z-index:200;min-width:180px;display:none;overflow:hidden;border:1px solid var(--gray-200)}
+.lang-dropdown.open{display:block}
+.lang-dropdown-title{padding:8px 14px 6px;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--gray-100)}
+.lang-list{max-height:300px;overflow-y:auto}
+.lang-opt{padding:9px 14px;font-size:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.lang-opt:hover{background:var(--gray-50)}
+.lang-opt.active{background:var(--blue-light);color:var(--blue);font-weight:500}
+
+/* ── Layout ── */
+.page{max-width:900px;margin:0 auto;padding:0 24px}
+
+/* ── Hero ── */
+.hero{padding:56px 0 48px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue-light);color:var(--blue);font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:20px;letter-spacing:.5px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.15;color:var(--gray-800);margin-bottom:16px}
+.hero p{font-size:16px;color:var(--gray-600);max-width:560px;margin:0 auto 32px}
+.hero-chips{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.chip{background:var(--gray-100);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gray-600);font-weight:500}
+
+/* ── Section ── */
+section{padding:48px 0;border-top:1px solid var(--gray-100)}
+section:first-of-type{border-top:none}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:10px}
+.section-title{font-size:clamp(20px,3vw,26px);font-weight:700;margin-bottom:12px}
+.section-desc{color:var(--gray-600);margin-bottom:32px;max-width:640px}
+
+/* ── Download cards ── */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.platform-card{border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:24px;transition:border-color .2s,box-shadow .2s}
+.platform-card:hover{border-color:var(--blue);box-shadow:var(--shadow)}
+.platform-icon{font-size:32px;margin-bottom:12px}
+.platform-card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.platform-card .sub{font-size:13px;color:var(--gray-600);margin-bottom:16px}
+.dl-btn{display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;transition:background .15s;white-space:nowrap}
+.dl-btn:hover{background:var(--blue-dark);text-decoration:none}
+.dl-btn svg{width:15px;height:15px;flex-shrink:0}
+.dl-btn-outline{background:#fff;color:var(--blue);border:1.5px solid var(--blue);margin-top:8px}
+.dl-btn-outline:hover{background:var(--blue-light)}
+.dl-stack{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+
+/* ── Steps ── */
+.steps{display:flex;flex-direction:column;gap:24px}
+.step{display:flex;gap:16px}
+.step-num{width:32px;height:32px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-body h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.step-body p,.step-body li{font-size:14px;color:var(--gray-600);line-height:1.7}
+.step-body ol,.step-body ul{padding-left:18px;margin-top:6px}
+.step-body li{margin-bottom:4px}
+
+/* ── Note / Warning boxes ── */
+.note{background:var(--blue-light);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:var(--gray-800);margin:16px 0}
+.warning{background:#fff7ed;border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;margin:16px 0}
+.note strong,.warning strong{display:block;margin-bottom:3px}
+
+/* ── Screenshot ── */
+.screenshot{margin:20px 0;box-shadow:var(--shadow-lg);border-radius:10px;border:1px solid var(--gray-200);width:100%;max-width:560px}
+
+/* ── FAQ ── */
+.faq-list{display:flex;flex-direction:column;gap:0}
+.faq-item{border-bottom:1px solid var(--gray-100)}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:16px 0;font-size:15px;font-weight:600;color:var(--gray-800);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq-q:hover{color:var(--blue)}
+.faq-q svg{flex-shrink:0;transition:transform .2s;color:var(--gray-400)}
+.faq-item.open .faq-q svg{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 0 16px;font-size:14px;color:var(--gray-600);line-height:1.7}
+.faq-item.open .faq-a{display:block}
+
+/* ── Footer ── */
+footer{background:var(--gray-50);border-top:1px solid var(--gray-200);padding:32px 24px;text-align:center;font-size:13px;color:var(--gray-400)}
+footer a{color:var(--gray-400)}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .nav-links{display:none}
+  .hero{padding:36px 0 32px}
+  .step{flex-direction:column;gap:8px}
+  .step-num{margin-top:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">MultiLinkServer</span>
+    <div class="nav-links">
+      <a href="#download" data-i18n="navDownload">Download</a>
+      <a href="#setup" data-i18n="navSetup">Setup</a>
+      <a href="#macos" data-i18n="navMacos">macOS</a>
+      <a href="#faq" data-i18n="navFaq">FAQ</a>
+      <a href="#" id="nav-ios" data-i18n="navIos">iOS App</a>
+      <a href="#" id="nav-android" data-i18n="navAndroid">Android App</a>
+      <a href="https://tally.so/r/aQGVKB" target="_blank" data-i18n="navFeedback">Feedback</a>
+    </div>
+    <div class="lang-sel" id="lang-btn" onclick="toggleLang()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span id="lang-label">EN</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Lang dropdown -->
+<div class="lang-dropdown" id="lang-dropdown">
+  <div class="lang-dropdown-title" data-i18n="language">Language</div>
+  <div class="lang-list" id="lang-list"></div>
+</div>
+
+<div class="page">
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span data-i18n="heroBadge">Wireless Keyboard & Trackpad</span>
+  </div>
+  <h1 data-i18n="heroTitle">Turn your phone into a wireless keyboard</h1>
+  <p data-i18n="heroDesc">MultiLinkServer runs on your PC. Open the app on your phone — they connect automatically over Wi-Fi. No cables, no Bluetooth pairing.</p>
+  <div class="hero-chips">
+    <span class="chip">macOS</span>
+    <span class="chip">Windows</span>
+    <span class="chip">Linux</span>
+  </div>
+</div>
+
+<!-- Download -->
+<section id="download">
+  <div class="section-label" data-i18n="sectionDownload">Download</div>
+  <h2 class="section-title" data-i18n="downloadTitle">Install the PC Client</h2>
+  <p class="section-desc" data-i18n="downloadDesc">Install the client on your computer first. The phone app will connect to it over your local network.</p>
+
+  <div class="platform-grid">
+    <!-- macOS -->
+    <div class="platform-card">
+      <div class="platform-icon">🍎</div>
+      <h3>macOS</h3>
+      <p class="sub" data-i18n="macSub">Apple Silicon (M1/M2/M3) + Intel Universal</p>
+      <div class="dl-stack">
+        <a href="https://baidu.com/1.dmg" class="dl-btn" id="dl-mac">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="dlDmg">Download DMG</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Windows -->
+    <div class="platform-card">
+      <div class="platform-icon"><svg width="36" height="36" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="40" height="40" rx="4" fill="#F25022"/><rect x="46" y="2" width="40" height="40" rx="4" fill="#7FBA00"/><rect x="2" y="46" width="40" height="40" rx="4" fill="#00A4EF"/><rect x="46" y="46" width="40" height="40" rx="4" fill="#FFB900"/></svg></div>
+      <h3>Windows</h3>
+      <p class="sub" data-i18n="winSub">Windows 10 / 11 · x86_64</p>
+      <div class="dl-stack">
+        <a href="https://baidu.com/3.exe" class="dl-btn" id="dl-win">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="dlExe">Download EXE</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Linux -->
+    <div class="platform-card">
+      <div class="platform-icon">🐧</div>
+      <h3>Linux</h3>
+      <p class="sub" data-i18n="linSub">Ubuntu / Debian · x86_64</p>
+      <div class="dl-stack">
+        <a href="https://baidu.com/4.deb" class="dl-btn" id="dl-lin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="dlDeb">Download DEB</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Network Setup -->
+<section id="setup">
+  <div class="section-label" data-i18n="sectionSetup">Setup</div>
+  <h2 class="section-title" data-i18n="setupTitle">Getting Connected</h2>
+  <p class="section-desc" data-i18n="setupDesc">Follow these steps to get your phone controlling your computer.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4 data-i18n="step1Title">Install &amp; Launch the Client</h4>
+        <p data-i18n="step1Desc">Download and install MultiLinkServer on your computer. Launch it — you will see the server IP and port in the main window and a status icon in the system tray.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4 data-i18n="step2Title">Same Wi-Fi Network</h4>
+        <p data-i18n="step2Desc">Your phone and computer must be on the same local network (Wi-Fi). The app cannot connect over mobile data or across different networks.</p>
+        <div class="note"><strong data-i18n="tipAutoDiscover">Tip: Auto-Discovery</strong><span data-i18n="tipAutoDiscoverDesc">Once the client is running, the phone app will usually detect it automatically via mDNS — no manual IP entry needed.</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4 data-i18n="step3Title">Open the App &amp; Connect</h4>
+        <p data-i18n="step3Desc">Open the phone app. If the computer is not found automatically, tap "Add Device" and enter the IP address and port shown in the client window.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4 data-i18n="step4Title">Start Typing &amp; Swiping</h4>
+        <p data-i18n="step4Desc">Once connected, the keyboard and trackpad are live. You can switch between keyboard and touchpad layouts from the settings icon in the app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- macOS Accessibility -->
+<section id="macos">
+  <div class="section-label">macOS</div>
+  <h2 class="section-title" data-i18n="macosTitle">Enable Accessibility Permission</h2>
+  <p class="section-desc" data-i18n="macosDesc">On macOS, apps must be explicitly granted Accessibility permission before they can inject keyboard and mouse events. This is a one-time setup.</p>
+
+  <div class="warning">
+    <strong data-i18n="macosWarnTitle">⚠️ Required on macOS</strong>
+    <span data-i18n="macosWarnDesc">Without this permission, the client will start and accept connections, but all keyboard and mouse input will be silently ignored by macOS.</span>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4 data-i18n="mac1Title">Install to Applications folder</h4>
+        <p data-i18n="mac1Desc">Open the DMG file and drag <strong>MultiLinkServer.app</strong> into the <strong>Applications</strong> folder. Do not run it directly from the DMG — macOS will quarantine the app at a random path, causing permission issues.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4 data-i18n="mac2Title">Open System Settings → Privacy &amp; Security → Accessibility</h4>
+        <p data-i18n="mac2Desc">Go to <strong>System Settings</strong> (or System Preferences on older macOS) → <strong>Privacy &amp; Security</strong> → <strong>Accessibility</strong>.</p>
+        <img src="privacy.png" alt="macOS Privacy & Security - Accessibility" class="screenshot">
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4 data-i18n="mac3Title">Add and enable MultiLinkServer</h4>
+        <p data-i18n="mac3Desc">If MultiLinkServer already appears in the list, first remove it by clicking the <strong>−</strong> button. Then click <strong>+</strong>, navigate to your Applications folder, and select <strong>MultiLinkServer.app</strong>. Toggle the switch to ON.</p>
+        <div class="note"><strong data-i18n="mac3NoteTitle">Why remove and re-add?</strong><span data-i18n="mac3NoteDesc">macOS ties the permission to the app's code signature. After a fresh install or update, the old entry may refer to a previous binary — re-adding ensures the current version is trusted.</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4 data-i18n="mac4Title">Relaunch the app</h4>
+        <p data-i18n="mac4Desc">Quit MultiLinkServer from the system tray (right-click → Quit) and reopen it from Applications. The client will now be able to inject keyboard and mouse events.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label" data-i18n="sectionFaq">FAQ</div>
+  <h2 class="section-title" data-i18n="faqTitle">Troubleshooting</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="faq1q">The phone app can't find my computer automatically</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" data-i18n="faq1a">Make sure both devices are on the same Wi-Fi network. Some routers have "AP isolation" or "client isolation" enabled, which blocks device-to-device communication — check your router settings and disable it. You can also add the device manually using the IP and port shown in the client window.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="faq2q">Connected on macOS but keyboard/mouse input doesn't work</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" data-i18n="faq2a">This means the Accessibility permission is not granted (or was granted for a different binary). Follow the macOS setup steps above: go to System Settings → Privacy & Security → Accessibility, remove the old MultiLinkServer entry, re-add it, and relaunch the app.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="faq3q">The accessibility dialog keeps appearing on every launch</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" data-i18n="faq3a">This usually means the app is running from the DMG (not from /Applications), or macOS has quarantined it. Always install to Applications first. If the problem persists, open Terminal and run: <code>xattr -cr /Applications/MultiLinkServer.app</code> — this removes the quarantine flag.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="faq4q">The connection drops frequently</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" data-i18n="faq4a">Unstable connections are usually caused by a weak Wi-Fi signal or phone screen lock. Try disabling screen auto-lock while using the app. If your router supports 5 GHz Wi-Fi, connecting both devices to the 5 GHz band can improve reliability.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="faq5q">Which port does the app use? Does it need firewall changes?</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a" data-i18n="faq5a">MultiLinkServer uses TCP port 8333 by default (it automatically finds the next available port if 8333 is busy). On Windows, you may need to allow the app through Windows Defender Firewall when prompted on first launch. On macOS and Linux, no firewall changes are usually required.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span data-i18n="faq6q">How do I contact support or report an issue?</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">
+        <span data-i18n="faq6a">You can submit feedback (including your OS and CPU model) using the feedback option in the system tray menu.</span>
+        <br><br>
+        <a href="https://tally.so/r/aQGVKB" target="_blank" data-i18n="feedbackLink">Submit Feedback →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<footer>
+  <p data-i18n="footerText">© 2025 MultiLinkServer. All rights reserved.</p>
+</footer>
+
+<script>
+// ── i18n ───────────────────────────────────────────────────────────────────
+const LANGS=[
+  {code:'en',  label:'EN', native:'English'},
+  {code:'zhCN',label:'中', native:'简体中文'},
+  {code:'zhTW',label:'繁', native:'繁體中文'},
+  {code:'ja',  label:'JA', native:'日本語'},
+  {code:'ko',  label:'KO', native:'한국어'},
+  {code:'fr',  label:'FR', native:'Français'},
+  {code:'de',  label:'DE', native:'Deutsch'},
+  {code:'es',  label:'ES', native:'Español'},
+  {code:'pt',  label:'PT', native:'Português'},
+  {code:'ru',  label:'RU', native:'Русский'},
+  {code:'hi',  label:'HI', native:'हिन्दी'},
+  {code:'id',  label:'ID', native:'Bahasa Indonesia'},
+  {code:'vi',  label:'VI', native:'Tiếng Việt'},
+  {code:'ar',  label:'AR', native:'العربية'},
+];
+
+const T={
+en:{
+  navDownload:'Download',navSetup:'Setup',navMacos:'macOS',navFaq:'FAQ',navIos:'iOS App',navAndroid:'Android App',navFeedback:'Feedback',
+  heroBadge:'Wireless Keyboard & Trackpad',
+  heroTitle:'Turn your phone into a wireless keyboard',
+  heroDesc:'MultiLinkServer runs on your PC. Open the app on your phone — they connect automatically over Wi-Fi. No cables, no Bluetooth pairing.',
+  sectionDownload:'Download',
+  downloadTitle:'Install the PC Client',
+  downloadDesc:'Install the client on your computer first. The phone app will connect to it over your local network.',
+  macSub:'Apple Silicon (M1/M2/M3) + Intel Universal',
+  winSub:'Windows 10 / 11 · x86_64',
+  linSub:'Ubuntu / Debian · x86_64',
+  dlDmg:'Download DMG',dlExe:'Download EXE',dlDeb:'Download DEB',
+  sectionSetup:'Setup',
+  setupTitle:'Getting Connected',
+  setupDesc:'Follow these steps to get your phone controlling your computer.',
+  step1Title:'Install & Launch the Client',
+  step1Desc:'Download and install MultiLinkServer on your computer. Launch it — you will see the server IP and port in the main window and a status icon in the system tray.',
+  step2Title:'Same Wi-Fi Network',
+  step2Desc:'Your phone and computer must be on the same local network (Wi-Fi). The app cannot connect over mobile data or across different networks.',
+  tipAutoDiscover:'Tip: Auto-Discovery',
+  tipAutoDiscoverDesc:' Once the client is running, the phone app will usually detect it automatically via mDNS — no manual IP entry needed.',
+  step3Title:'Open the App & Connect',
+  step3Desc:'Open the phone app. If the computer is not found automatically, tap "Add Device" and enter the IP address and port shown in the client window.',
+  step4Title:'Start Typing & Swiping',
+  step4Desc:'Once connected, the keyboard and trackpad are live. You can switch between keyboard and touchpad layouts from the settings icon in the app.',
+  macosTitle:'Enable Accessibility Permission',
+  macosDesc:'On macOS, apps must be explicitly granted Accessibility permission before they can inject keyboard and mouse events. This is a one-time setup.',
+  macosWarnTitle:'⚠️ Required on macOS',
+  macosWarnDesc:' Without this permission, the client will start and accept connections, but all keyboard and mouse input will be silently ignored by macOS.',
+  mac1Title:'Install to Applications folder',
+  mac1Desc:'Open the DMG file and drag MultiLinkServer.app into the Applications folder. Do not run it directly from the DMG — macOS will quarantine the app at a random path, causing permission issues.',
+  mac2Title:'Open System Settings → Privacy & Security → Accessibility',
+  mac2Desc:'Go to System Settings (or System Preferences on older macOS) → Privacy & Security → Accessibility.',
+  mac3Title:'Add and enable MultiLinkServer',
+  mac3Desc:'If MultiLinkServer already appears in the list, first remove it by clicking the − button. Then click +, navigate to your Applications folder, and select MultiLinkServer.app. Toggle the switch to ON.',
+  mac3NoteTitle:'Why remove and re-add? ',
+  mac3NoteDesc:'macOS ties the permission to the app\'s code signature. After a fresh install or update, the old entry may refer to a previous binary — re-adding ensures the current version is trusted.',
+  mac4Title:'Relaunch the app',
+  mac4Desc:'Quit MultiLinkServer from the system tray (right-click → Quit) and reopen it from Applications. The client will now be able to inject keyboard and mouse events.',
+  sectionFaq:'FAQ',faqTitle:'Troubleshooting',
+  faq1q:'The phone app can\'t find my computer automatically',
+  faq1a:'Make sure both devices are on the same Wi-Fi network. Some routers have "AP isolation" enabled, which blocks device-to-device communication — disable it in your router settings. You can also add the device manually using the IP and port shown in the client window.',
+  faq2q:'Connected on macOS but keyboard/mouse input doesn\'t work',
+  faq2a:'This means the Accessibility permission is not granted or is stale. Follow the macOS setup steps: go to System Settings → Privacy & Security → Accessibility, remove the old MultiLinkServer entry, re-add it, and relaunch the app.',
+  faq3q:'The accessibility dialog keeps appearing on every launch',
+  faq3a:'This usually means the app is running from the DMG (not /Applications). Always install to Applications first. If the problem persists, open Terminal and run: xattr -cr /Applications/MultiLinkServer.app',
+  faq4q:'The connection drops frequently',
+  faq4a:'Unstable connections are usually caused by a weak Wi-Fi signal or phone screen lock. Try disabling screen auto-lock while using the app. Connecting both devices to a 5 GHz Wi-Fi band improves reliability.',
+  faq5q:'Which port does the app use? Does it need firewall changes?',
+  faq5a:'MultiLinkServer uses TCP port 8333 by default. On Windows, allow it through Windows Defender Firewall when prompted. On macOS and Linux, no changes are usually needed.',
+  faq6q:'How do I contact support or report an issue?',
+  faq6a:'You can submit feedback (including your OS and CPU model) using the feedback option in the system tray menu.',
+  feedbackLink:'Submit Feedback →',
+  footerText:'© 2025 MultiLinkServer. All rights reserved.',
+  language:'Language',
+},
+zhCN:{
+  navDownload:'下载',navSetup:'安装',navMacos:'macOS设置',navFaq:'常见问题',navIos:'iOS App',navAndroid:'Android App',navFeedback:'反馈',
+  heroBadge:'无线键盘与触控板',
+  heroTitle:'把手机变成无线键盘',
+  heroDesc:'在电脑上运行 MultiLinkServer，手机打开 App 即可通过 Wi-Fi 自动连接，无需数据线，无需蓝牙配对。',
+  sectionDownload:'下载',
+  downloadTitle:'安装电脑客户端',
+  downloadDesc:'请先在电脑上安装客户端，手机 App 将通过局域网连接到它。',
+  macSub:'Apple 芯片（M1/M2/M3）+ Intel 通用版',
+  winSub:'Windows 10 / 11 · x86_64',
+  linSub:'Ubuntu / Debian · x86_64',
+  dlDmg:'下载 DMG',dlExe:'下载 EXE',dlDeb:'下载 DEB',
+  sectionSetup:'安装配置',
+  setupTitle:'连接步骤',
+  setupDesc:'按照以下步骤让手机控制电脑。',
+  step1Title:'安装并启动客户端',
+  step1Desc:'在电脑上下载并安装 MultiLinkServer。启动后，主窗口会显示服务器的 IP 地址和端口，系统托盘中也会出现状态图标。',
+  step2Title:'确保同一 Wi-Fi 网络',
+  step2Desc:'手机和电脑必须连接到同一个局域网（Wi-Fi）。App 无法通过移动数据或不同网络连接。',
+  tipAutoDiscover:'提示：自动发现',
+  tipAutoDiscoverDesc:' 客户端启动后，手机 App 通常会通过 mDNS 自动发现电脑，无需手动输入 IP 地址。',
+  step3Title:'打开 App 并连接',
+  step3Desc:'打开手机 App。如果未自动发现电脑，点击"添加设备"，输入客户端窗口中显示的 IP 地址和端口。',
+  step4Title:'开始使用键盘与触控板',
+  step4Desc:'连接成功后，键盘和触控板即可使用。可在 App 设置中切换键盘、触控板等布局模式。',
+  macosTitle:'开启辅助功能权限',
+  macosDesc:'macOS 要求应用必须获得"辅助功能"授权，才能模拟键盘和鼠标输入。这是一次性设置。',
+  macosWarnTitle:'⚠️ macOS 必须操作',
+  macosWarnDesc:' 没有此权限，客户端虽然能启动和接受连接，但所有键盘和鼠标输入都会被 macOS 静默拦截，无法生效。',
+  mac1Title:'将 App 安装到"应用程序"文件夹',
+  mac1Desc:'打开 DMG 文件，将 MultiLinkServer.app 拖入"应用程序"（Applications）文件夹。请勿直接从 DMG 运行——macOS 会将其隔离到随机路径，导致权限无法识别。',
+  mac2Title:'打开系统设置 → 隐私与安全 → 辅助功能',
+  mac2Desc:'前往"系统设置"（旧版 macOS 为"系统偏好设置"）→"隐私与安全性"→"辅助功能"。',
+  mac3Title:'添加并开启 MultiLinkServer',
+  mac3Desc:'如果列表中已有 MultiLinkServer，先点击 − 按钮将其删除。然后点击 + 号，进入"应用程序"文件夹，选择 MultiLinkServer.app，并打开开关。',
+  mac3NoteTitle:'为什么要先删除再添加？',
+  mac3NoteDesc:'macOS 将权限与应用的代码签名绑定。重新安装或更新后，旧条目可能指向旧版二进制文件——重新添加可确保当前版本被信任。',
+  mac4Title:'重新启动应用',
+  mac4Desc:'在系统托盘右键点击 MultiLinkServer，选择"退出"，然后从"应用程序"文件夹重新打开。客户端现在可以正常注入键盘和鼠标事件了。',
+  sectionFaq:'常见问题',faqTitle:'故障排除',
+  faq1q:'手机 App 无法自动找到电脑',
+  faq1a:'请确保手机和电脑连接到同一个 Wi-Fi 网络。部分路由器开启了"AP 隔离"或"客户端隔离"功能，会阻止设备间通信——请在路由器设置中关闭该功能。也可在 App 中手动添加设备，输入客户端窗口中显示的 IP 和端口。',
+  faq2q:'macOS 上已连接但键盘/鼠标无响应',
+  faq2a:'这说明辅助功能权限未授予或已失效。请按照上方 macOS 设置步骤操作：进入系统设置 → 辅助功能，删除旧的 MultiLinkServer 条目，重新添加，然后重启应用。',
+  faq3q:'每次启动都弹出系统授权对话框',
+  faq3a:'通常是因为应用在从 DMG 运行（而非从"应用程序"文件夹）。请务必先安装到"应用程序"文件夹。如果问题仍然存在，打开终端执行：xattr -cr /Applications/MultiLinkServer.app',
+  faq4q:'连接频繁断开',
+  faq4a:'连接不稳定通常由 Wi-Fi 信号弱或手机息屏引起。建议在使用期间关闭手机自动锁屏。将手机和电脑都连接到 5GHz 频段也能提高稳定性。',
+  faq5q:'应用使用哪个端口？需要修改防火墙吗？',
+  faq5a:'MultiLinkServer 默认使用 TCP 8333 端口（若端口被占用会自动寻找可用端口）。Windows 首次运行时可能弹出防火墙提示，点击允许即可。macOS 和 Linux 通常无需修改防火墙设置。',
+  faq6q:'如何联系支持或反馈问题？',
+  faq6a:'可通过系统托盘菜单中的"反馈"选项提交问题（建议附上您的操作系统和 CPU 型号）。',
+  feedbackLink:'提交反馈 →',
+  footerText:'© 2025 MultiLinkServer 保留所有权利。',
+  language:'语言',
+},
+zhTW:{
+  navDownload:'下載',navSetup:'安裝',navMacos:'macOS設定',navFaq:'常見問題',navIos:'iOS App',navAndroid:'Android App',navFeedback:'回饋',
+  heroBadge:'無線鍵盤與觸控板',
+  heroTitle:'把手機變成無線鍵盤',
+  heroDesc:'在電腦上執行 MultiLinkServer，手機開啟 App 即可透過 Wi-Fi 自動連接，無需傳輸線，無需藍牙配對。',
+  sectionDownload:'下載',downloadTitle:'安裝電腦客戶端',downloadDesc:'請先在電腦上安裝客戶端，手機 App 將透過區域網路連接到它。',
+  macSub:'Apple 晶片（M1/M2/M3）+ Intel 通用版',winSub:'Windows 10 / 11 · x86_64',linSub:'Ubuntu / Debian · x86_64',
+  dlDmg:'下載 DMG',dlExe:'下載 EXE',dlDeb:'下載 DEB',
+  sectionSetup:'安裝設定',setupTitle:'連接步驟',setupDesc:'按照以下步驟讓手機控制電腦。',
+  step1Title:'安裝並啟動客戶端',step1Desc:'在電腦上下載並安裝 MultiLinkServer。啟動後，主視窗會顯示伺服器 IP 和連接埠，系統列也會出現狀態圖示。',
+  step2Title:'確保同一 Wi-Fi 網路',step2Desc:'手機和電腦必須連接到同一個區域網路（Wi-Fi）。App 無法透過行動數據或不同網路連接。',
+  tipAutoDiscover:'提示：自動探索',tipAutoDiscoverDesc:' 客戶端啟動後，手機 App 通常會透過 mDNS 自動發現電腦，無需手動輸入 IP。',
+  step3Title:'開啟 App 並連接',step3Desc:'開啟手機 App。若未自動找到電腦，點選「新增裝置」，輸入客戶端視窗中的 IP 和連接埠。',
+  step4Title:'開始使用鍵盤與觸控板',step4Desc:'連接成功後即可使用鍵盤和觸控板。可在 App 設定中切換佈局。',
+  macosTitle:'開啟輔助使用權限',macosDesc:'macOS 要求應用必須獲得「輔助使用」授權才能模擬鍵盤和滑鼠輸入。這是一次性設定。',
+  macosWarnTitle:'⚠️ macOS 必須操作',macosWarnDesc:' 沒有此權限，客戶端雖能啟動和接受連接，但所有輸入都會被 macOS 靜默攔截。',
+  mac1Title:'將 App 安裝到「應用程式」檔案夾',mac1Desc:'開啟 DMG 檔案，將 MultiLinkServer.app 拖入「應用程式」檔案夾。請勿直接從 DMG 執行。',
+  mac2Title:'前往系統設定 → 隱私權與安全性 → 輔助使用',mac2Desc:'前往「系統設定」→「隱私權與安全性」→「輔助使用」。',
+  mac3Title:'新增並啟用 MultiLinkServer',mac3Desc:'若列表中已有 MultiLinkServer，先點 − 刪除，再點 + 新增，選取 MultiLinkServer.app 並開啟開關。',
+  mac3NoteTitle:'為何要先刪除再新增？',mac3NoteDesc:'macOS 將權限與程式碼簽章綁定。重新安裝後舊條目可能無效，重新新增確保目前版本被信任。',
+  mac4Title:'重新啟動應用程式',mac4Desc:'從系統列右鍵點選退出，再從「應用程式」重新開啟即可。',
+  sectionFaq:'常見問題',faqTitle:'疑難排解',
+  faq1q:'手機 App 無法自動找到電腦',faq1a:'請確認手機和電腦連接到同一 Wi-Fi。部分路由器啟用了 AP 隔離，請在路由器設定中關閉。也可手動輸入 IP 和連接埠新增裝置。',
+  faq2q:'macOS 上已連接但輸入無反應',faq2a:'輔助使用權限未授權或已過期。請重新按照 macOS 設定步驟操作：刪除舊條目，重新新增，重啟應用。',
+  faq3q:'每次啟動都彈出系統授權視窗',faq3a:'應用可能在從 DMG 直接執行。請先安裝到「應用程式」。若問題持續，在終端機執行：xattr -cr /Applications/MultiLinkServer.app',
+  faq4q:'連接頻繁中斷',faq4a:'通常由 Wi-Fi 訊號弱或手機螢幕鎖定引起。建議關閉自動鎖定螢幕，並使用 5GHz Wi-Fi。',
+  faq5q:'應用使用哪個連接埠？需要修改防火牆嗎？',faq5a:'預設使用 TCP 8333 連接埠。Windows 首次執行時允許防火牆提示即可。macOS 和 Linux 通常不需要修改。',
+  faq6q:'如何聯繫支援或回報問題？',faq6a:'可透過系統列選單中的「回饋」選項提交問題（建議附上作業系統和 CPU 型號）。',
+  feedbackLink:'提交回饋 →',footerText:'© 2025 MultiLinkServer 保留所有權利。',language:'語言',
+},
+ja:{
+  navDownload:'ダウンロード',navSetup:'セットアップ',navMacos:'macOS設定',navFaq:'FAQ',navIos:'iOS App',navAndroid:'Android App',navFeedback:'フィードバック',
+  heroBadge:'ワイヤレスキーボード＆トラックパッド',
+  heroTitle:'スマホをワイヤレスキーボードに',
+  heroDesc:'PCでMultiLinkServerを起動し、スマホアプリを開けばWi-Fi経由で自動接続。ケーブルもBluetooth設定も不要。',
+  sectionDownload:'ダウンロード',downloadTitle:'PCクライアントをインストール',downloadDesc:'まずPCにクライアントをインストールしてください。スマホアプリはローカルネットワーク経由で接続されます。',
+  macSub:'Apple Silicon (M1/M2/M3) + Intel ユニバーサル',winSub:'Windows 10 / 11 · x86_64',linSub:'Ubuntu / Debian · x86_64',
+  dlDmg:'DMGをダウンロード',dlExe:'EXEをダウンロード',dlDeb:'DEBをダウンロード',
+  sectionSetup:'セットアップ',setupTitle:'接続手順',setupDesc:'以下の手順でスマホからPCを操作できます。',
+  step1Title:'クライアントをインストール・起動',step1Desc:'PCにMultiLinkServerをダウンロードしてインストール。起動するとメインウィンドウにIPアドレスとポートが表示され、システムトレイにアイコンが現れます。',
+  step2Title:'同じWi-Fiネットワークに接続',step2Desc:'スマホとPCは同じローカルネットワーク（Wi-Fi）に接続する必要があります。モバイルデータや異なるネットワークでは接続できません。',
+  tipAutoDiscover:'ヒント: 自動検出',tipAutoDiscoverDesc:' クライアント起動後、スマホアプリはmDNSでPCを自動検出します。手動でIPを入力する必要はありません。',
+  step3Title:'アプリを開いて接続',step3Desc:'スマホアプリを開いてください。自動で見つからない場合は「デバイス追加」をタップし、クライアント画面のIPとポートを入力します。',
+  step4Title:'キーボード・トラックパッドを使う',step4Desc:'接続後すぐにキーボードとトラックパッドが使えます。アプリのレイアウト設定で切り替え可能です。',
+  macosTitle:'アクセシビリティ権限を有効化',macosDesc:'macOSでキーボード・マウスイベントを注入するにはアクセシビリティ権限が必要です。初回のみの設定です。',
+  macosWarnTitle:'⚠️ macOS必須設定',macosWarnDesc:' この権限がないと、接続はできてもキーボード・マウス入力がmacOSに無視されます。',
+  mac1Title:'Applicationsフォルダにインストール',mac1Desc:'DMGを開き、MultiLinkServer.appをApplicationsフォルダにドラッグ。DMGから直接起動しないでください（macOSがランダムパスに隔離します）。',
+  mac2Title:'システム設定 → プライバシーとセキュリティ → アクセシビリティ',mac2Desc:'「システム設定」→「プライバシーとセキュリティ」→「アクセシビリティ」を開きます。',
+  mac3Title:'MultiLinkServerを追加して有効化',mac3Desc:'リストにMultiLinkServerがあれば−で削除後、+でApplicationsからMultiLinkServer.appを追加してスイッチをONにします。',
+  mac3NoteTitle:'なぜ削除して再追加するの？',mac3NoteDesc:'macOSはコード署名に紐付けて権限を管理します。更新後は古いエントリが無効になるため、再追加で最新版を信頼させます。',
+  mac4Title:'アプリを再起動',mac4Desc:'システムトレイから右クリック→終了し、Applicationsから再起動してください。',
+  sectionFaq:'FAQ',faqTitle:'トラブルシューティング',
+  faq1q:'スマホアプリがPCを自動で見つけられない',faq1a:'両方のデバイスが同じWi-Fiに接続されているか確認してください。一部のルーターはAP分離が有効で、デバイス間通信を遮断します。ルーター設定でAP分離を無効にするか、IPとポートを手動入力してデバイスを追加してください。',
+  faq2q:'macOSで接続できたがキーボード・マウス入力が効かない',faq2a:'アクセシビリティ権限が付与されていないか、古いエントリです。上記のmacOS設定手順に従い、古いエントリを削除して再追加し、アプリを再起動してください。',
+  faq3q:'起動するたびにシステム認証ダイアログが表示される',faq3a:'DMGから直接起動している可能性があります。Applicationsフォルダにインストールしてください。問題が続く場合はターミナルで実行: xattr -cr /Applications/MultiLinkServer.app',
+  faq4q:'接続が頻繁に切れる',faq4a:'Wi-Fi信号が弱い、またはスマホの画面ロックが原因のことが多いです。使用中は自動ロックをオフにし、5GHzバンドへの接続をお試しください。',
+  faq5q:'使用ポートは？ファイアウォール変更は必要？',faq5a:'デフォルトはTCP 8333番ポートです。Windowsでは初回起動時にファイアウォールの許可ダイアログが表示されます。macOS・Linuxは通常変更不要です。',
+  faq6q:'サポートへの連絡や問題報告は？',faq6a:'システムトレイのフィードバックメニューからOSとCPUモデルと共に報告できます。',
+  feedbackLink:'フィードバックを送る →',footerText:'© 2025 MultiLinkServer. All rights reserved.',language:'言語',
+},
+};
+// For other languages, fall back to English for now (keys are identical)
+['ko','fr','de','es','pt','ru','hi','id','vi','ar'].forEach(c=>{ T[c]=Object.assign({},T.en); });
+
+let lang='en';
+
+function detectLang(){
+  const s=localStorage.getItem('help_lang');
+  if(s&&T[s])return s;
+  const n=(navigator.language||'').toLowerCase();
+  if(n==='zh-cn'||n==='zh-hans')return 'zhCN';
+  if(n==='zh-tw'||n==='zh-hk'||n==='zh-hant')return 'zhTW';
+  const short=n.split('-')[0];
+  if(T[n.replace('-','')])return n.replace('-','');
+  if(T[short])return short;
+  return 'en';
+}
+
+function applyLang(l){
+  lang=l;
+  const d=T[l]||T.en;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(d[k]!==undefined)el.textContent=d[k];
+  });
+  document.documentElement.lang=l==='ar'?'ar':l.startsWith('zh')?l==='zhCN'?'zh-CN':'zh-TW':l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  const m=LANGS.find(x=>x.code===l);
+  if(m)document.getElementById('lang-label').textContent=m.label;
+  localStorage.setItem('help_lang',l);
+  buildLangList();
+}
+
+function buildLangList(){
+  const el=document.getElementById('lang-list');
+  el.innerHTML='';
+  LANGS.forEach(l=>{
+    const d=document.createElement('div');
+    d.className='lang-opt'+(l.code===lang?' active':'');
+    d.innerHTML=`<span>${l.native}</span>${l.code===lang?'<span>✓</span>':''}`;
+    d.onclick=()=>{applyLang(l.code);document.getElementById('lang-dropdown').classList.remove('open');};
+    el.appendChild(d);
+  });
+}
+
+function toggleLang(){
+  const dd=document.getElementById('lang-dropdown');
+  if(dd.classList.contains('open')){dd.classList.remove('open');}
+  else{buildLangList();dd.classList.add('open');}
+}
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#lang-btn')&&!e.target.closest('#lang-dropdown'))
+    document.getElementById('lang-dropdown').classList.remove('open');
+});
+
+// ── FAQ accordion ──────────────────────────────────────────────────────────
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  item.classList.toggle('open');
+}
+
+// ── Highlight platform ─────────────────────────────────────────────────────
+function highlightPlatform(){
+  const ua=navigator.userAgent.toLowerCase();
+  const id=ua.includes('win')?'dl-win':ua.includes('linux')?'dl-lin':'dl-mac';
+  const btn=document.getElementById(id);
+  if(btn){btn.style.background='var(--green)';btn.style.boxShadow='0 0 0 3px rgba(22,163,74,.2)';}
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  applyLang(detectLang());
+  highlightPlatform();
+});
+</script>
+</body>
+</html>
